@@ -18,7 +18,7 @@ vacc_notebook = 'vaccinations_in_South_Africa.ipynb'
 
 files = covid_data + vacc_data
 
-provinces = ['GP', 'WC', 'SA']
+provinces = ['SA', 'GP', 'WC', 'NC']
 format = 'pdf'
 
 def download(targets):

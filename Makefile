@@ -1,5 +1,5 @@
 DATA_URL=https://raw.githubusercontent.com/dsfsi/covid19za/master/data
-PROVINCES = GP WC SA
+PROVINCES = GP WC SA NC
 FORMAT = pdf
 OUTPUT = output
 
