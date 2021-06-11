@@ -1,21 +1,21 @@
-TODAY := $(shell gdate -I)
-#DATA_URL=https://raw.githubusercontent.com/dsfsi/covid19za/master/data
-PROVINCES = GP SA
+DATA_URL=https://raw.githubusercontent.com/dsfsi/covid19za/master/data
+PROVINCES = GP WC SA
 FORMAT = pdf
+OUTPUT = output
 
-outputs = $(foreach province,$(PROVINCES),covid_$(TODAY)_$(province).$(FORMAT))
+outputs = $(foreach province,$(PROVINCES),$(OUTPUT)/covid_$(province).$(FORMAT))
 
-#datafiles = covid19za_provincial_cumulative_timeline_confirmed.csv covid19za_provincial_cumulative_timeline_deaths.csv
+datafiles = covid19za_provincial_cumulative_timeline_confirmed.csv covid19za_provincial_cumulative_timeline_deaths.csv covid19za_timeline_vaccination.csv
 
-#data = $(addprefix data/,$(datafiles))
+data = $(addprefix data/,$(datafiles))
 
-all: $(outputs)
+all: $(outputs) $(OUTPUT)/vaccinations.$(FORMAT)
 
-# data_$(TODAY):
-# 	[ -e $@ ] || touch $@
+data/%:
+	curl -s $(DATA_URL)/$* > $@
 
-# data/%: data_$(TODAY)
-# 	cd data; wget $(DATA_URL)/$*
+$(OUTPUT)/covid_%.$(FORMAT): COVID_in_South_Africa.ipynb $(data)
+	papermill -p province $* -p outformat $(FORMAT) -p show_deathprediction True $< > /dev/null
 
-covid_$(TODAY)_%.$(FORMAT): COVID_in_South_Africa.ipynb #$(data)
-	papermill -p province $* -p outformat $(FORMAT) $< > /dev/null
+$(OUTPUT)/vaccinations.$(FORMAT): vaccinations_in_South_Africa.ipynb $(data)
+	papermill -p outformat $(FORMAT) $< > /dev/null
