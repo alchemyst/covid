@@ -5,6 +5,8 @@ base_url = "https://raw.githubusercontent.com/dsfsi/covid19za/master/data/"
 data = pathlib.Path('data')
 output = pathlib.Path('output')
 
+static = list(pathlib.Path('static').glob('*.csv'))
+
 covid_data = [
     data / "covid19za_provincial_cumulative_timeline_confirmed.csv",
     data / "covid19za_provincial_cumulative_timeline_deaths.csv",
@@ -18,7 +20,7 @@ vacc_notebook = 'vaccinations_in_South_Africa.ipynb'
 
 files = covid_data + vacc_data
 
-provinces = ['SA', 'GP', 'WC', 'NC']
+provinces = 'SA,EC,FS,GP,KZN,LP,MP,NC,NW,WC'.split(',')
 format = 'pdf'
 
 def download(targets):
@@ -43,7 +45,7 @@ def task_covidreport():
         yield {
             'name': name,
             'targets': [output / name],
-            'file_dep': covid_data,
+            'file_dep': covid_data + static,
             'actions': [
                 f'papermill -p province {province} -p outformat {format} -p show_deathprediction True {covid_notebook} > /dev/null'
             ]
@@ -52,7 +54,7 @@ def task_covidreport():
 
 def task_vaccinereport():
     return {
-        'targets': [output / 'vaccinations.{format}'],
+        'targets': [output / f'vaccinations.{format}'],
         'file_dep': vacc_data,
         'actions': [
             f'papermill -p outformat {format} {vacc_notebook} > /dev/null'

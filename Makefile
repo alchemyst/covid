@@ -9,12 +9,14 @@ datafiles = covid19za_provincial_cumulative_timeline_confirmed.csv covid19za_pro
 
 data = $(addprefix data/,$(datafiles))
 
+static = $(wildcard static/*.csv)
+
 all: $(outputs) $(OUTPUT)/vaccinations.$(FORMAT)
 
 data/%:
 	curl -s $(DATA_URL)/$* > $@
 
-$(OUTPUT)/covid_%.$(FORMAT): COVID_in_South_Africa.ipynb $(data)
+$(OUTPUT)/covid_%.$(FORMAT): COVID_in_South_Africa.ipynb $(data) $(static)
 	papermill -p province $* -p outformat $(FORMAT) -p show_deathprediction True $< > /dev/null
 
 $(OUTPUT)/vaccinations.$(FORMAT): vaccinations_in_South_Africa.ipynb $(data)
