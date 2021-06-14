@@ -38,24 +38,26 @@ def task_download():
             'actions': [download]
         }
 
-
 def task_covidreport():
     for province in provinces:
         name = f'covid_{province}.{format}'
         yield {
             'name': name,
             'targets': [output / name],
-            'file_dep': covid_data + static,
+            'file_dep': covid_data + static + [covid_notebook],
             'actions': [
                 f'papermill -p province {province} -p outformat {format} -p show_deathprediction True {covid_notebook} > /dev/null'
             ]
         }
 
+def task_twitterimage():
+    return {
+        'actions': ['montage output/covid_SA.png output/covid_GP.png -trim -bordercolor white -border 30x30 -tile 1x2 -geometry +0+0 output/covid_SA_GP
 
 def task_vaccinereport():
     return {
         'targets': [output / f'vaccinations.{format}'],
-        'file_dep': vacc_data,
+        'file_dep': vacc_data + [vacc_notebook],
         'actions': [
             f'papermill -p outformat {format} {vacc_notebook} > /dev/null'
         ]
