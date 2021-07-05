@@ -1,0 +1,8 @@
+wheel
+pandas
+scipy
+matplotlib
+doit
+jupyter
+papermill
+more_itertools
