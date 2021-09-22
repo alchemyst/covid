@@ -52,7 +52,7 @@ def task_covidreport():
 
 def task_twitterimage():
     return {
-        'actions': ['montage output/covid_SA.png output/covid_GP.png -trim -bordercolor white -border 30x30 -tile 1x2 -geometry +0+0 output/covid_SA_GP'],
+        'actions': ['montage output/covid_SA.png output/covid_GP.png -trim -bordercolor white -border 30x30 -tile 1x2 -geometry +0+0 output/covid_SA_GP.png'],
     }
 
 def task_vaccinereport():
